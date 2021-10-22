@@ -8,9 +8,21 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
+let mongoose= require('mongoose');
 
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
+
+//instantiate mongo
+mongoose.connect('mongodb://localhost:27017/shoes')
+
+let db=mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error'));
+db.once('open', function ()
+{
+  console.log('connected to MongoDB at: mongodb://localhost:27017/shoes');
+}
+)
 
 let app = express();
 
