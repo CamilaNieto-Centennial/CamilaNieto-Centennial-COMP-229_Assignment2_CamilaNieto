@@ -8,22 +8,27 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
-let mongoose= require('mongoose');
 
 let indexRouter = require('../routes/index');
 let usersRouter = require('../routes/users');
 
-//instantiate mongo
-mongoose.connect('mongodb://localhost:27017/shoes')
+let mongoose= require('mongoose');
+//DB Configuration
+//import * as DBConfig from './db';
+let DBConfig=require('./db');
+
+//Point mongoose to the DB URI
+mongoose.connect(DBConfig.LocalURI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 let db=mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error'));
-db.once('open', function ()
+db.on('error', console.error.bind(console, 'Connection error: '));
+db.once('open', ()=>
 {
-  console.log('connected to MongoDB at: mongodb://localhost:27017/shoes');
+  console.log('Connected to MongoDB...');
 }
-)
+);
 
+//App Configuration
 let app = express();
 
 // view engine setup
