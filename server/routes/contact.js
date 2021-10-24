@@ -1,6 +1,6 @@
 const express = require('express');
 //const { DisplayHomePage, DisplayAboutPage, DisplayProjectsPage, DisplayServicesPage, DisplayContactPage } = require('../controllers');
-const { DisplayContactListPage } = require('../controllers/contact');
+const { DisplayListPage, DisplayAddPage, DisplayEditPage, ProcessAddPage, ProcessEditPage, ProcessDeletePage} = require('../controllers/contact');
 let router = express.Router();
 
 //Mongo Database Name
@@ -16,14 +16,23 @@ http://server-url/contact/delete/:id
 
 */
 
-//GET display contact list view
-router.get('/list', DisplayContactListPage);
+//GET display contact-list view
+router.get('/list', DisplayListPage);
 
-//GET display contact item edit
+//GET display /contact-list/add page.
+router.get('/add', DisplayAddPage);
 
+//GET display /contact-list/edit/:id page.
+router.get('/edit/:id', DisplayEditPage);
 
+//POST process /contact-list/add page
+router.get('/add', ProcessAddPage);
 
+//POST process /contact-list/edit/:id page
+router.get('/edit/:id', ProcessEditPage);
 
+//GET process /contact-list/delete/:id
+router.get('/delete/:id', ProcessDeletePage);
 
 
 
