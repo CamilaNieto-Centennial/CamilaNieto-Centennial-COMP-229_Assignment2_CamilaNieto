@@ -88,7 +88,7 @@ let strategy = new JWTStrategy(jwtOptions, (jwt_payload, done) => {
       return done(err, false);
     });
 });
-
+  
 passport.use(strategy);
 
 // routing
