@@ -1,30 +1,39 @@
-//COMP 229-005 Assignment 1
-//Author: Camila Nieto
-//ID: 301175110
-
-//import express from 'express';
-const express = require('express');
-const { DisplayHomePage, DisplayAboutPage, DisplayProjectsPage, DisplayServicesPage, DisplayContactPage } = require('../controllers');
+let express = require('express');
 let router = express.Router();
 
-/* GET home page. */
-router.get('/', DisplayHomePage);
+let indexController = require('../controllers/index');
 
 /* GET home page. */
-router.get('/home', DisplayHomePage);
+router.get('/', indexController.displayHomePage);
+
+/* GET home page. */
+router.get('/home', indexController.displayHomePage);
 
 /* GET About Us page. */
-router.get('/about', DisplayAboutPage);
+router.get('/about', indexController.displayAboutPage);
 
-/* GET Projects page. */
-router.get('/projects', DisplayProjectsPage);
+/* GET Products page. */
+router.get('/products', indexController.displayProductsPage);
 
 /* GET Services page. */
-router.get('/services', DisplayServicesPage);
-
+router.get('/services', indexController.displayServicesPage);
 
 /* GET Contact Us page. */
-router.get('/contact', DisplayContactPage);
+router.get('/contact', indexController.displayContactPage);
 
-//export default router;
+/* GET Route for displaying the Login page */
+router.get('/login', indexController.displayLoginPage);
+
+/* POST Route for processing the Login page */
+router.post('/login', indexController.processLoginPage);
+
+/* GET Route for displaying the Register page */
+router.get('/register', indexController.displayRegisterPage);
+
+/* POST Route for processing the Register page */
+router.post('/register', indexController.processRegisterPage);
+
+/* GET to perform UserLogout */
+router.get('/logout', indexController.performLogout);
+
 module.exports = router;

@@ -1,17 +1,13 @@
 let mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
-
-//create a model class
-const ContactSchema = new Schema({
+// create a model class
+let contactModel = mongoose.Schema({
     contactName: String,
     contactNumber: String,
     emailAddress: String
 },
 {
-    collection: "contacts" //collection name
+    collection: "contacts"
 });
 
-const Model = mongoose.model('Contact', ContactSchema);
-
-module.exports = Model;
+module.exports = mongoose.model('Contact', contactModel);

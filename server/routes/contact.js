@@ -1,40 +1,40 @@
-const express = require('express');
-//const { DisplayHomePage, DisplayAboutPage, DisplayProjectsPage, DisplayServicesPage, DisplayContactPage } = require('../controllers');
-const { DisplayListPage, DisplayAddPage, DisplayEditPage, ProcessAddPage, ProcessEditPage, ProcessDeletePage} = require('../controllers/contact');
+let express = require('express');
 let router = express.Router();
+let mongoose = require('mongoose');
 
-//Mongo Database Name
-//Mongo Collection Name
-//Mongo Document Structure
+let jwt = require('jsonwebtoken');
 
-/*
+let passport = require('passport');
 
-http://server-url/contact/list
-http://server-url/contact/create
-http://server-url/contact/edit/:id
-http://server-url/contact/delete/:id
+let contactController = require('../controllers/contact');
 
-*/
+// helper function for guard purposes
+function requireAuth(req, res, next)
+{
+    // check if the user is logged in
+    if(!req.isAuthenticated())
+    {
+        return res.redirect('/login');
+    }
+    next();
+}
 
-//GET display contact-list view
-router.get('/list', DisplayListPage);
+/* GET Route for the Book List page - READ Operation */
+router.get('/', contactController.displayContactList);
 
-//GET display /contact-list/add page.
-router.get('/add', DisplayAddPage);
+/* GET Route for displaying the Add page - CREATE Operation */
+router.get('/add', requireAuth, contactController.displayAddPage);
 
-//GET display /contact-list/edit/:id page.
-router.get('/edit/:id', DisplayEditPage);
+/* POST Route for processing the Add page - CREATE Operation */
+router.post('/add', requireAuth, contactController.processAddPage);
 
-//POST process /contact-list/add page
-router.get('/add', ProcessAddPage);
+/* GET Route for displaying the Edit page - UPDATE Operation */
+router.get('/edit/:id', requireAuth, contactController.displayEditPage);
 
-//POST process /contact-list/edit/:id page
-router.get('/edit/:id', ProcessEditPage);
+/* POST Route for processing the Edit page - UPDATE Operation */
+router.post('/edit/:id', requireAuth, contactController.processEditPage);
 
-//GET process /contact-list/delete/:id
-router.get('/delete/:id', ProcessDeletePage);
+/* GET to perform  Deletion - DELETE Operation */
+router.get('/delete/:id', requireAuth, contactController.performDelete);
 
-
-
-//export default router;
 module.exports = router;

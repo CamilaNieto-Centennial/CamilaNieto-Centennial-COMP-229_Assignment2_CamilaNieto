@@ -1,105 +1,112 @@
-const express = require('express');
+let express = require('express');
+let router = express.Router();
+let mongoose = require('mongoose');
 
-const ContactModel = require('../models/contact');
-//req: express.Request, res: express.Response, next:express.NextFunction
-//(R)ead in CRUD
-function DisplayListPage(req, res, next) {
-    ContactModel.find(function(err, contactCollection){
-        //console.log("HERE");
-        if(err){
-            console.error(err);
+let jwt = require('jsonwebtoken');
+
+// create a reference to the model
+let Contact = require('../models/contact');
+
+module.exports.displayContactList = (req, res, next) => {
+    Contact.find((err, contactList) => {
+        if(err)
+        {
+            return console.error(err);
+        }
+        else
+        {
+            //console.log(BookList);
+
+            res.render('contact/list', 
+            {title: 'Contacts', 
+            ContactList: contactList, 
+            displayName: req.user ? req.user.displayName : ''});      
+        }
+    });
+}
+
+module.exports.displayAddPage = (req, res, next) => {
+    res.render('contact/add', {title: 'Add Contact', 
+    displayName: req.user ? req.user.displayName : ''})          
+}
+
+module.exports.processAddPage = (req, res, next) => {
+    let newContact = Contact({
+        "contactName": req.body.contactName,
+        "contactNumber": req.body.contactNumber,
+        "emailAddress": req.body.emailAddress
+    });
+
+    Contact.create(newContact, (err, Contact) =>{
+        if(err)
+        {
+            console.log(err);
             res.end(err);
         }
+        else
+        {
+            // refresh the book list
+            res.redirect('/contact-list');
+        }
+    });
 
-        //console.log(contactCollection);
+}
 
-        res.render('index', {title: 'Contact list', page: 'contact/contact-list', contact: contactCollection})
-
-    })
-    //res.render('index', {title: 'Home', page: 'home'});
-  }
-  exports.DisplayListPage = DisplayListPage;
-
-// Display (E)dit page
-function DisplayEditPage(req, res, next) {
+module.exports.displayEditPage = (req, res, next) => {
     let id = req.params.id;
 
-    ContactModel.findById(id, {}, {}, (err, contactItemToEdit) => {
-        if (err) {
-            console.error(err);
+    Contact.findById(id, (err, contactToEdit) => {
+        if(err)
+        {
+            console.log(err);
             res.end(err);
-        };
-
-        console.log(contactItemToEdit);
-        res.render('index', { title: "Contact Edit", page: "contact/contact-edit", item: contactItemToEdit })
-    })
+        }
+        else
+        {
+            //show the edit view
+            res.render('contact/edit', {title: 'Edit Contact', contact: contactToEdit, 
+            displayName: req.user ? req.user.displayName : ''})
+        }
+    });
 }
-exports.DisplayEditPage = DisplayEditPage;
 
-// Display (C)reate page
-function DisplayAddPage(req, res, next) {
-    // show the edit view
-    res.render('index', { title: 'Add Contact', page: 'contact/contact-edit', item: '' });
-}
-exports.DisplayAddPage = DisplayAddPage;
+module.exports.processEditPage = (req, res, next) => {
+    let id = req.params.id
 
-// Process (E)dit page
-function ProcessEditPage(req, res, next) {
-    let id = req.params.id;
-
-    let updatedItem = new ContactModel({
+    let updatedContact = Contact({
         "_id": id,
         "contactName": req.body.contactName,
         "contactNumber": req.body.contactNumber,
         "emailAddress": req.body.emailAddress
     });
 
-    ContactModel.updateOne({ _id: id }, updatedItem, {}, (err) => {
-        if (err) {
-            console.error(err);
+    Contact.updateOne({_id: id}, updatedContact, (err) => {
+        if(err)
+        {
+            console.log(err);
             res.end(err);
         }
-
-        res.redirect('/contact/list');
-    })
-}
-exports.ProcessEditPage = ProcessEditPage;
-
-// Process (C)reate page
-function ProcessAddPage(req, res, next){//):void{...}
-
-    let newItem = new ContactModel({
-        "contactName": req.body.contactName,
-        "contactNumber": req.body.contactNumber,
-        "emailAddress": req.body.emailAddress
+        else
+        {
+            // refresh the book list
+            res.redirect('/contact-list');
+        }
     });
-
-    ContactModel.create(newItem, (err) => {
-        if (err) {
-            console.error(err);
-            res.end(err);
-        };
-
-        res.redirect('/contact/list');
-    })
 }
-exports.ProcessAddPage = ProcessAddPage;
 
-// Process (D)elete page
-function ProcessDeletePage(req, res, next) {
+module.exports.performDelete = (req, res, next) => {
     let id = req.params.id;
 
-    ContactModel.remove({ _id: id }, (err) => {
-        if (err) {
-            console.error(err);
+    Contact.remove({_id: id}, (err) => {
+        if(err)
+        {
+            console.log(err);
             res.end(err);
         }
-
-        res.redirect('/contact/list');
-    })
+        else
+        {
+             // refresh the book list
+             res.redirect('/contact-list');
+        }
+    });
 }
-
-exports.ProcessDeletePage = ProcessDeletePage;
-
-
-
