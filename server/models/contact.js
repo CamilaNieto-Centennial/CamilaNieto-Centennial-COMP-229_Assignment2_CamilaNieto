@@ -1,3 +1,6 @@
+//COMP 229-005 Assignment 2
+//Author: Camila Nieto
+//ID: 301175110
 let mongoose = require('mongoose');
 
 // create a model class

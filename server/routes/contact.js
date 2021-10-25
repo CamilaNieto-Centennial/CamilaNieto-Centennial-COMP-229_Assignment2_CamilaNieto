@@ -1,3 +1,6 @@
+//COMP 229-005 Assignment 2
+//Author: Camila Nieto
+//ID: 301175110
 let express = require('express');
 let router = express.Router();
 let mongoose = require('mongoose');

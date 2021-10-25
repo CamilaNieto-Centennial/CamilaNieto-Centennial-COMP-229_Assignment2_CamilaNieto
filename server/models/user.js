@@ -1,3 +1,6 @@
+//COMP 229-005 Assignment 2
+//Author: Camila Nieto
+//ID: 301175110
 // require modules for the User Model
 let mongoose = require('mongoose');
 let passportLocalMongoose = require('passport-local-mongoose');
